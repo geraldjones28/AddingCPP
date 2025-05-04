@@ -6,9 +6,16 @@
 //
 
 #include <iostream>
+#include <Metal/Metal.hpp>
+
+using namespace std;
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+   
+    MTL::Device* device = MTL::CreateSystemDefaultDevice();
+    
+    cout << "Hello, World from Metal-CPP!\n";
+    cout << "Metal device name: " << device->name()->utf8String() << endl;
+    
     return 0;
 }
