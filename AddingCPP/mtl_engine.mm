@@ -10,6 +10,8 @@
 void MTLEngine::init() {
     initDevice();
     initWindow();
+    
+    createTriangle();
 }
 
 void MTLEngine::run() {
@@ -42,4 +44,16 @@ void MTLEngine::initWindow() {
     metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
     metalWindow.contentView.layer = metalLayer;
     metalWindow.contentView.wantsLayer = YES;
+}
+
+void MTLEngine::createTriangle() {
+    simd::float3 triangleVertices[] = {
+        {-0.5f, -0.5f, 0.0f},
+        { 0.5f, -0.5f, 0.0f},
+        { 0.0f,  0.5f, 0.0f}
+    };
+    
+    triangleVertexBuffer = metalDevice->newBuffer(&triangleVertices,
+                                                   sizeof(triangleVertices),
+                                                   MTL::ResourceStorageModeShared);
 }
