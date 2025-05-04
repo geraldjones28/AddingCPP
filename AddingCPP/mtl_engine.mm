@@ -5,13 +5,19 @@
 //  Created by Gerald Jones on 5/4/25.
 //
 
+#include <iostream>
 #include "mtl_engine.hpp"
+
+using namespace std;
 
 void MTLEngine::init() {
     initDevice();
     initWindow();
     
     createTriangle();
+    createDefaultLibrary();
+    createCommandQueue();
+    createRenderPipeline();
 }
 
 void MTLEngine::run() {
@@ -56,4 +62,36 @@ void MTLEngine::createTriangle() {
     triangleVertexBuffer = metalDevice->newBuffer(&triangleVertices,
                                                    sizeof(triangleVertices),
                                                    MTL::ResourceStorageModeShared);
+}
+
+void MTLEngine::createDefaultLibrary() {
+    metalDefaultLibrary = metalDevice->newDefaultLibrary();
+    if (!metalDefaultLibrary) {
+        cerr << "Failed to load default library.";
+        exit(-1);
+    }
+}
+
+void MTLEngine::createCommandQueue() {
+    metalCommandQueue = metalDevice->newCommandQueue();
+}
+
+void MTLEngine::createRenderPipeline() {
+    MTL::Function* vertexShader = metalDefaultLibrary->newFunction(NS::String::string("vertexShader", NS::ASCIIStringEncoding));
+    assert(vertexShader);
+    MTL::Function* fragmentShader = metalDefaultLibrary->newFunction(NS::String::string("fragmentShader", NS::ASCIIStringEncoding));
+    assert(fragmentShader);
+    
+    MTL::RenderPipelineDescriptor* renderPipelineDescriptor = MTL::RenderPipelineDescriptor::alloc()->init();
+    renderPipelineDescriptor->setLabel(NS::String::string("Triangle Rendering Pipeline", NS::ASCIIStringEncoding));
+    renderPipelineDescriptor->setVertexFunction(vertexShader);
+    renderPipelineDescriptor->setFragmentFunction(fragmentShader);
+    assert(renderPipelineDescriptor);
+    MTL::PixelFormat pixelFormat = (MTL::PixelFormat)metalLayer.pixelFormat;
+    renderPipelineDescriptor->colorAttachments()->object(0)->setPixelFormat(pixelFormat);
+    
+    NS::Error* error;
+    metalRenderPSO = metalDevice->newRenderPipelineState(renderPipelineDescriptor, &error);
+    
+    renderPipelineDescriptor->release();
 }
