@@ -7,15 +7,16 @@
 
 #include <iostream>
 #include <Metal/Metal.hpp>
+#include "mtl_engine.hpp"
 
 using namespace std;
 
 int main(int argc, const char * argv[]) {
    
-    MTL::Device* device = MTL::CreateSystemDefaultDevice();
-    
-    cout << "Hello, World from Metal-CPP!\n";
-    cout << "Metal device name: " << device->name()->utf8String() << endl;
+    MTLEngine engine;
+    engine.init();
+    engine.run();
+    engine.cleanup();
     
     return 0;
 }

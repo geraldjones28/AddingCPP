@@ -29,7 +29,7 @@ private:
     GLFWwindow* glfwWindow;
     NSWindow* metalWindow;
     CAMetalLayer* metalLayer;
-}
+};
 
 //
 //  Created by Gerald Jones on 5/4/25.
