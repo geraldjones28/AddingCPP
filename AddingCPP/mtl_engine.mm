@@ -22,6 +22,10 @@ void MTLEngine::init() {
 
 void MTLEngine::run() {
     while (!glfwWindowShouldClose(glfwWindow)) {
+        @autoreleasepool {
+            metalDrawable = (__bridge CA::MetalDrawable*)[metalLayer nextDrawable];
+            draw();
+        }
         glfwPollEvents();
     }
 }
